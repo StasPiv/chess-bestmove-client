@@ -46,4 +46,33 @@ class Client
 
         return $move;
     }
+
+    public function startInfinite(string $fen, string $wsUrl)
+    {
+        try {
+            $response = $this->webClient->post('infinite/start', [
+                'form_params' => array(
+                    'fen' => $fen,
+                    'ws_url' => $wsUrl,
+                    'direct' => $this->webClient->getConfig('direct')
+                )
+            ])->getBody();
+
+            return json_decode($response, true);
+        } catch (\Throwable $exception) {
+            echo $exception->getMessage() . PHP_EOL;
+        }
+    }
+
+    public function stopInfinite(string $wsUrl)
+    {
+        $response = $this->webClient->post('infinite/stop', [
+            'form_params' => array(
+                'ws_url' => $wsUrl,
+                'direct' => $this->webClient->getConfig('direct')
+            )
+        ])->getBody();
+
+        return json_decode($response, true);
+    }
 }
